@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiScheduleRouteImport } from './routes/api/schedule'
 import { Route as ApiRoadmapRouteImport } from './routes/api/roadmap'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiScheduleRoute = ApiScheduleRouteImport.update({
+  id: '/api/schedule',
+  path: '/api/schedule',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiRoadmapRoute = ApiRoadmapRouteImport.update({
@@ -26,27 +32,31 @@ const ApiRoadmapRoute = ApiRoadmapRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/api/roadmap': typeof ApiRoadmapRoute
+  '/api/schedule': typeof ApiScheduleRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/api/roadmap': typeof ApiRoadmapRoute
+  '/api/schedule': typeof ApiScheduleRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/api/roadmap': typeof ApiRoadmapRoute
+  '/api/schedule': typeof ApiScheduleRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/roadmap'
+  fullPaths: '/' | '/api/roadmap' | '/api/schedule'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/roadmap'
-  id: '__root__' | '/' | '/api/roadmap'
+  to: '/' | '/api/roadmap' | '/api/schedule'
+  id: '__root__' | '/' | '/api/roadmap' | '/api/schedule'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ApiRoadmapRoute: typeof ApiRoadmapRoute
+  ApiScheduleRoute: typeof ApiScheduleRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/schedule': {
+      id: '/api/schedule'
+      path: '/api/schedule'
+      fullPath: '/api/schedule'
+      preLoaderRoute: typeof ApiScheduleRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/roadmap': {
@@ -71,6 +88,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ApiRoadmapRoute: ApiRoadmapRoute,
+  ApiScheduleRoute: ApiScheduleRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
